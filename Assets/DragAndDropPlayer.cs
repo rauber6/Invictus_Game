@@ -20,6 +20,7 @@ public class DragAndDropPlayer : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        Debug.Log("Begin UI Drag");
         canvasGroup.alpha = 0.6f; // Make the icon semi-transparent while dragging
         canvasGroup.blocksRaycasts = false; // Allow raycasts to pass through the icon
         if (selectionManager != null)
@@ -35,6 +36,7 @@ public class DragAndDropPlayer : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        Debug.Log("End UI Drag");
         canvasGroup.alpha = 1f; // Make the icon fully opaque
         canvasGroup.blocksRaycasts = true; // Block raycasts
 

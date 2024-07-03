@@ -57,50 +57,52 @@ public class Behaviour : MonoBehaviour
     }
 
     void MoveToTarget()
+{
+    if (isMoving)
     {
-        if (isMoving)
+        // Calculate the direction to the target
+        Vector2 direction = (targetPosition - transform.position).normalized;
+        Vector2 separation = CalculateSeparation();
+
+        // Combine the movement towards the target and the separation force
+        Vector2 movement = direction * moveSpeed + separation * separationForce;
+
+        // Move the sprite towards the target position using physics
+        rb.velocity = movement;
+
+        // Check if the sprite has reached the target position
+        if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
-            // Calculate the direction to the target
-            Vector2 direction = (targetPosition - transform.position).normalized;
-            Vector2 separation = CalculateSeparation();
+            isMoving = false;
+            rb.velocity = Vector2.zero;
 
-            // Combine the movement towards the target and the separation force
-            Vector2 movement = direction * moveSpeed + separation * separationForce;
-
-            // Move the sprite towards the target position using physics
-            rb.velocity = movement;
-
-            // Check if the sprite has reached the target position
-            if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+            // Remove the "X" marker once the sprite reaches the target
+            if (currentXMarker != null)
             {
-                isMoving = false;
-                rb.velocity = Vector2.zero;
-
-                // Remove the "X" marker once the sprite reaches the target
-                if (currentXMarker != null)
-                {
-                    Destroy(currentXMarker);
-                }
+                Destroy(currentXMarker);
             }
         }
     }
+}
+
 
     void HighlightDestination(Vector3 position)
+{
+    // Destroy the previous "X" marker if it exists
+    if (currentXMarker != null)
     {
-        // Destroy the previous "X" marker if it exists
-        if (currentXMarker != null)
-        {
-            Destroy(currentXMarker);
-        }
-
-        // Instantiate a new "X" marker at the target position
-        currentXMarker = Instantiate(xMarkerPrefab, position, Quaternion.identity);
-
-        // Adjust the z position to be slightly lower than the player
-        Vector3 markerPosition = currentXMarker.transform.position;
-        markerPosition.z = transform.position.z + 1; // Set Z position to be lower than the player
-        currentXMarker.transform.position = markerPosition;
+        Destroy(currentXMarker);
     }
+
+    // Instantiate a new "X" marker at the target position
+    currentXMarker = Instantiate(xMarkerPrefab, position, Quaternion.identity);
+
+    // Adjust the z position to be slightly lower than the player
+    Vector3 markerPosition = currentXMarker.transform.position;
+    markerPosition.z = transform.position.z + 1; // Set Z position to be lower than the player
+    currentXMarker.transform.position = markerPosition;
+}
+
 
     Vector2 CalculateSeparation()
     {
